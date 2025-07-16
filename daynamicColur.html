@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>daynamic color</title>
+  </head>
+  <style>
+    .active {
+      color: red;
+      font-weight: bold;
+      background-color: black;
+    }
+    .color-box {
+      width: 800px;
+      height: 300px;
+
+      margin-bottom: 10px;
+    }
+  </style>
+  <body>
+    <div class="color-box active"></div>
+    <div class="button-container">
+      <button class="red">Red</button>
+      <button class="green">Green</button>
+      <button class="blue">Blue</button>
+      <button class="yellow">Yellow</button>
+      <button class="reset">Reset</button>
+    </div>
+  </body>
+  <script>
+    const colorBox = document.querySelector(".color-box");
+    const buttonContainer = document.querySelector(".button-container");
+
+    const colors = ["red", "blue", "green", "yellow", "reset"];
+    buttonContainer.addEventListener("click", (event) => {
+      if (event.target.tagName === "BUTTON") {
+        if (event.target.className == "reset") {
+          colorBox.style.background = "black";
+        }
+        colorBox.style.background = event.target.className;
+      }
+    });
+  </script>
+</html>

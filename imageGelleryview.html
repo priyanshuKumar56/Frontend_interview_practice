@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Unsplash Thumbnail Gallery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <style>
+    .active {
+      display: none;
+    }
+  </style>
+  <body class="bg-gray-100 min-h-screen p-8 font-sans">
+    <!-- Gallery Container -->
+    <div
+      class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] active sk bg-white z-[999] rounded-xl shadow-xl p-6"
+    >
+      full view
+      <img src="" alt="" class="w-full h-screen" />
+      <button class="minimize">minimize</button>
+    </div>
+    <div class="max-w-6xl mx-auto">
+      <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">
+        📸 Unsplash Thumbnail Gallery
+      </h1>
+
+      <!-- Thumbnails Grid -->
+      <div
+        class="images_gellery grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
+      >
+        <img
+          src="https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?auto=format&fit=crop&w=400&q=80"
+          class="rounded-lg object-cover cursor-pointer shadow-sm hover:shadow-lg transition duration-200 ease-in-out"
+          alt="Nature"
+        />
+
+        <img
+          src="https://media.istockphoto.com/id/538449165/photo/beautiful-cloudscape-over-the-sea-sunset-shot.jpg?s=612x612&w=0&k=20&c=XwieRIV5Df3Azuk8tH3CnAlLA-GO5GBE7R7dKtb1POw="
+          class="rounded-lg object-cover cursor-pointer shadow-sm hover:shadow-lg transition hover:scale-105 duration-200 ease-in-out"
+          alt="Sunset"
+        />
+
+        <img
+          src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80"
+          class="rounded-lg object-cover cursor-pointer shadow-sm hover:shadow-lg transition hover:scale-105 duration-200 ease-in-out"
+          alt="Mountains"
+        />
+
+        <img
+          src="https://images.unsplash.com/photo-1485217988980-11786ced9454?auto=format&fit=crop&w=400&q=80"
+          class="rounded-lg object-cover cursor-pointer shadow-sm hover:shadow-lg transition hover:scale-105 duration-200 ease-in-out"
+          alt="Forest"
+        />
+
+        <img
+          src="https://www.travelandleisure.com/thmb/LX4znxqtKQYJ3QPu4ArNCuvJw_s=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/seljalandsfoss-iceland-1-WATERFALLS1021-e9c2348a42c841d5b9d661d16dcdcf8c.jpg"
+          class="rounded-lg object-cover cursor-pointer shadow-sm hover:shadow-lg transition hover:scale-105 duration-200 ease-in-out"
+          alt="Waterfall"
+        />
+
+        <img
+          src="https://images.unsplash.com/photo-1496307653780-42ee777d4833?auto=format&fit=crop&w=400&q=80"
+          class="rounded-lg object-cover cursor-pointer shadow-sm hover:shadow-lg transition hover:scale-105 duration-200 ease-in-out"
+          alt="Beach"
+        />
+
+        <img
+          src="https://www.adobe.com/creativecloud/photography/type/media_18ec078ac12361c5bd437dae615fd5dd92bfbfe51.jpg?width=1200&format=pjpg&optimize=medium"
+          class="rounded-lg object-cover cursor-pointer shadow-sm hover:shadow-lg transition hover:scale-105 duration-200 ease-in-out"
+          alt="Cityscape"
+        />
+
+        <img
+          src="https://images.unsplash.com/photo-1525097487452-6278ff080c31?auto=format&fit=crop&w=400&q=80"
+          class="rounded-lg object-cover cursor-pointer shadow-sm hover:shadow-lg transition hover:scale-105 duration-200 ease-in-out"
+          alt="Bridge"
+        />
+      </div>
+    </div>
+  </body>
+  <script >const images_gellery = document.querySelector(".images_gellery");
+console.log(images_gellery);
+images_gellery.addEventListener("click", (e) => {
+  console.log(e.target.src);
+  if (e.target.tagName === "IMG") {
+    document.body.style.background = "#6a656573";
+    const fullView = document.getElementsByClassName("sk")[0];
+    fullView.classList.toggle("active");
+    const image = fullView.children[0];
+    image.src = e.target.src;
+  }
+});
+const minimzebtn = document.querySelector(".minimize");
+minimzebtn.addEventListener("click", () => {
+  const fullView = document.getElementsByClassName("sk")[0];
+  fullView.classList.toggle("active");
+  document.body.style.background = "white";
+});
+</script>
+</html>

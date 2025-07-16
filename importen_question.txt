@@ -1,0 +1,80 @@
+How does web work?  7975207019
+what is the lifecycle of browser?
+What are the fundamentals of web?
+When to use Differ?
+When to use Async?
+Where to use JS?
+Should JS be used in the <head> or not?
+Why and why not JS should be used 
+How would you like to serve the JS file on the browser. If I want all of them together for first pain then will you serve the JS files?
+Do you know Bundling?
+Do you know chunking?
+Do you know the difference between HTTP2 and HTTP 1:1?
+
+HTML foundation and accessibility 
+What is semantic HTML?
+Where to use <nav>, <article>, <header>, <footer>, <h1>, <h2>, <p>?
+Where to use <button> and what is it's role? 
+Which Tag should be placed where?
+What is Role?
+What is keyboard Navigation?
+When to use <alt> Attribute?
+What is ARIA?
+What is semantics?
+How to be SEO friendly in HTML?
+What are the different state of Form?
+Do you understand the validations in HTML Forms?
+Can you make it correctly right there? (Responsive)
+What is Accessibility 
+
+CSS
+What is Specificity?
+What is Box model?
+What is Grid Layout?
+What are the difference btw Flexbox and Grid?
+What is the Tailwind concept?
+What is the effect of Tailwind on Performance?
+What is used, how is it used?
+How Positions are used?
+What is the meaning of cascade?
+
+JS
+Runtime Behaviour (How does the event loop in JS work?).
+Do you know Promise in JS?
+What is Polyfills?
+What is TDZ?
+What is Hoisting?
+What is Closure?
+How testing is done?
+What frameworks are used for testing?
+Which is good of bad test?
+What type of test are there?
+What is unit Test?
+What is Integration?
+What is End to End Test?
+
+React
+Why didn't you useContext?
+Why did you feel Zustand is better than Redux?
+What can be the alternatives of the tool that you used?
+Do you understand the lifecycle of react?
+What will be the console.log print?
+Will read enter here or not?
+ Why or why not can Read enter here?
+How do Hooks work?
+Can you write custom hooks?
+What is Reconciliation?
+What is Performance in React?
+What is Memoization in React?
+How to keep the rendering in React Minimum? 
+Visit official Doc and see keywords like Virtual Dom, Side Effect, Es6,etc.
+
+Next.js - It's ok if you don't know Next.js but you should know these answers.
+What is SSR?
+What is SSG?
+What is ISR?
+What is CSR?
+     - CSR: Corporate Social Responsibility?
+How is File based Routing done?
+What is it's Middleware?
+What is it's Edge Function?

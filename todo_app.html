@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>todo-app</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+
+  <body>
+    <div
+      class="container mx-auto flex justify-center p-4 flex-col items-center"
+    >
+      <div class="flex items-center justify-between mb-4 max-w-2xl w-[530px]">
+        <input
+          type="text"
+          placeholder="Enter your todo"
+          class="border-2 border-gray-700 focus:border-pink-600 max-w-lg w-[400px] p-2 rounded-lg"
+        />
+        <button
+          class="add-todo-btn bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow"
+        >
+          Add To-Do
+        </button>
+      </div>
+      <div
+        class="todo-list w-[520px] h-[500px] backdrop-blur-md bg-white/10 border border-white/30 rounded-xl p-6 shadow-lg overflow-y-scroll mx-auto mt-10"
+      ></div>
+    </div>
+  </body>
+  <script>
+    const input = document.querySelector("input");
+    const output = document.querySelector(".todo-list");
+    const btn = document.querySelector(".add-todo-btn");
+    const ul = document.createElement("ul");
+
+    btn.addEventListener("click", function () {
+      const text = input.value.trim();
+      if (text === "") {
+        alert("Please enter a todo item.");
+        return;
+      }
+
+      const li = document.createElement("li");
+      li.innerHTML += `
+    <p>${text}</p>
+    <button class="delete-btn bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow">
+      Delete
+    </button>`;
+      ul.appendChild(li);
+      input.value = ""; // Clear the input field
+    });
+
+    output.appendChild(ul);
+
+    ul.addEventListener("click", function (e) {
+      if (e.target.classList.contains("delete-btn")) {
+        const li = e.target.closest("li");
+        if (li) {
+          ul.removeChild(li);
+        }
+      }
+    });
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        btn.click(); // Trigger the Add button click
+      }
+    });
+    console.log(output.offsetWidth);
+  </script>
+</html>

@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JavaScript Execution Step-by-Step</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: #0a0a0a;
+        color: #ffffff;
+        overflow-x: auto;
+        min-height: 100vh;
+        position: relative;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(
+            circle at 20% 20%,
+            rgba(120, 119, 198, 0.3) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 80% 80%,
+            rgba(255, 119, 198, 0.3) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 40% 40%,
+            rgba(120, 219, 255, 0.2) 0%,
+            transparent 50%
+          );
+        z-index: -1;
+      }
+
+      .container {
+        max-width: 1800px;
+        margin: 0 auto;
+        padding: 24px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 32px;
+      }
+
+      .header h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 12px;
+        letter-spacing: -0.02em;
+      }
+
+      .header p {
+        font-size: 1.1rem;
+        color: #a0a0a0;
+        font-weight: 400;
+      }
+
+      .keyboard-hint {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 32px;
+        flex-wrap: wrap;
+      }
+
+      .key-hint {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 12px 16px;
+        font-size: 14px;
+        backdrop-filter: blur(10px);
+      }
+
+      .key {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 6px;
+        padding: 4px 8px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        min-width: 24px;
+        text-align: center;
+      }
+
+      .main-layout {
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+        gap: 24px;
+        margin-bottom: 24px;
+      }
+
+      .code-section {
+        background: rgba(0, 0, 0, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 24px;
+        backdrop-filter: blur(20px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      }
+
+      .code-section h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: #f0f0f0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .code-line {
+        display: flex;
+        align-items: center;
+        padding: 12px 16px;
+        margin: 2px 0;
+        border-radius: 8px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 14px;
+        line-height: 1.5;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        border-left: 3px solid transparent;
+        cursor: pointer;
+      }
+
+      .code-line:hover {
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .code-line.current {
+        background: linear-gradient(
+          90deg,
+          rgba(255, 193, 7, 0.15) 0%,
+          rgba(255, 193, 7, 0.05) 100%
+        );
+        border-left-color: #ffc107;
+        transform: translateX(4px);
+        box-shadow: 0 0 20px rgba(255, 193, 7, 0.2);
+      }
+
+      .code-line.executed {
+        background: linear-gradient(
+          90deg,
+          rgba(76, 175, 80, 0.1) 0%,
+          rgba(76, 175, 80, 0.03) 100%
+        );
+        border-left-color: #4caf50;
+        opacity: 0.7;
+      }
+
+      .line-number {
+        width: 32px;
+        color: #666;
+        font-size: 13px;
+        margin-right: 16px;
+        text-align: right;
+        user-select: none;
+      }
+
+      .runtime-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto auto;
+        gap: 16px;
+      }
+
+      .runtime-component {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 20px;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .runtime-component::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .runtime-component.active {
+        border-color: rgba(255, 193, 7, 0.4);
+        background: rgba(255, 193, 7, 0.05);
+        transform: scale(1.02);
+        box-shadow: 0 8px 32px rgba(255, 193, 7, 0.1);
+      }
+
+      .runtime-component.active::before {
+        opacity: 1;
+      }
+
+      .runtime-component h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+        color: #f0f0f0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .call-stack {
+        grid-column: 1;
+        grid-row: 1;
+      }
+
+      .memory-heap {
+        grid-column: 2;
+        grid-row: 1;
+      }
+
+      .web-apis {
+        grid-column: 1;
+        grid-row: 2;
+      }
+
+      .event-loop {
+        grid-column: 2;
+        grid-row: 2;
+      }
+
+      .queues-container {
+        grid-column: 1 / -1;
+        grid-row: 3;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      .component-item {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        padding: 12px 16px;
+        margin: 6px 0;
+        font-size: 13px;
+        text-align: center;
+        transition: all 0.3s ease;
+        font-family: "JetBrains Mono", monospace;
+      }
+
+      .stack-item {
+        background: linear-gradient(
+          135deg,
+          rgba(244, 67, 54, 0.2),
+          rgba(211, 47, 47, 0.1)
+        );
+        border-color: rgba(244, 67, 54, 0.3);
+        color: #ff9999;
+      }
+
+      .heap-item {
+        background: linear-gradient(
+          135deg,
+          rgba(156, 39, 176, 0.2),
+          rgba(123, 31, 162, 0.1)
+        );
+        border-color: rgba(156, 39, 176, 0.3);
+        color: #ce93d8;
+      }
+
+      .api-item {
+        background: linear-gradient(
+          135deg,
+          rgba(0, 188, 212, 0.2),
+          rgba(0, 151, 167, 0.1)
+        );
+        border-color: rgba(0, 188, 212, 0.3);
+        color: #81d4fa;
+      }
+
+      .queue-item {
+        background: linear-gradient(
+          135deg,
+          rgba(76, 175, 80, 0.2),
+          rgba(56, 142, 60, 0.1)
+        );
+        border-color: rgba(76, 175, 80, 0.3);
+        color: #a5d6a7;
+      }
+
+      .microtask-item {
+        background: linear-gradient(
+          135deg,
+          rgba(63, 81, 181, 0.2),
+          rgba(48, 63, 159, 0.1)
+        );
+        border-color: rgba(63, 81, 181, 0.3);
+        color: #9fa8da;
+      }
+
+      .loop-item {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 152, 0, 0.2),
+          rgba(245, 124, 0, 0.1)
+        );
+        border-color: rgba(255, 152, 0, 0.3);
+        color: #ffcc02;
+      }
+
+      .empty-state {
+        color: #666;
+        font-size: 12px;
+        text-align: center;
+        font-style: italic;
+        padding: 20px;
+      }
+
+      .step-info {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 20px;
+        margin: 24px 0;
+        backdrop-filter: blur(10px);
+      }
+
+      .step-counter {
+        font-size: 14px;
+        color: #ffc107;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .step-description {
+        font-size: 16px;
+        line-height: 1.5;
+        color: #f0f0f0;
+      }
+
+      .console-section {
+        background: rgba(0, 0, 0, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 24px;
+        backdrop-filter: blur(20px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      }
+
+      .console-section h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+        color: #f0f0f0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .console-output {
+        max-height: 200px;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+      }
+
+      .console-output::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .console-output::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .console-output::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 3px;
+      }
+
+      .console-line {
+        font-family: "JetBrains Mono", monospace;
+        margin: 8px 0;
+        padding: 8px 12px;
+        border-radius: 6px;
+        animation: fadeInUp 0.5s ease;
+        font-size: 14px;
+      }
+
+      .console-sync {
+        color: #4caf50;
+        background: rgba(76, 175, 80, 0.1);
+        border-left: 3px solid #4caf50;
+      }
+
+      .console-async {
+        color: #ff9800;
+        background: rgba(255, 152, 0, 0.1);
+        border-left: 3px solid #ff9800;
+      }
+
+      .console-promise {
+        color: #2196f3;
+        background: rgba(33, 150, 243, 0.1);
+        border-left: 3px solid #2196f3;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1.02);
+          opacity: 0.9;
+        }
+      }
+
+      .pulsing {
+        animation: pulse 2s infinite;
+      }
+
+      .controls {
+        text-align: center;
+        margin: 24px 0;
+      }
+
+      .btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        margin: 0 8px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+      }
+
+      .btn:active {
+        transform: translateY(0);
+      }
+
+      .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .navigation-hint {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background: rgba(0, 0, 0, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        padding: 16px;
+        backdrop-filter: blur(10px);
+        font-size: 12px;
+        color: #a0a0a0;
+        z-index: 1000;
+      }
+
+      @media (max-width: 1400px) {
+        .main-layout {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        .runtime-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .queues-container {
+          grid-column: 1 / -1;
+          grid-template-columns: 1fr;
+          gap: 12px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 16px;
+        }
+
+        .header h1 {
+          font-size: 2rem;
+        }
+
+        .runtime-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .keyboard-hint {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .navigation-hint {
+          position: static;
+          margin-top: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🎬 JavaScript Execution Visualizer</h1>
+        <p>Step through JavaScript execution with keyboard navigation</p>
+      </div>
+
+      <div class="keyboard-hint">
+        <div class="key-hint">
+          <span class="key">←</span>
+          <span>Previous Step</span>
+        </div>
+        <div class="key-hint">
+          <span class="key">→</span>
+          <span>Next Step</span>
+        </div>
+        <div class="key-hint">
+          <span class="key">R</span>
+          <span>Reset</span>
+        </div>
+        <div class="key-hint">
+          <span class="key">Space</span>
+          <span>Auto Play</span>
+        </div>
+      </div>
+
+      <div class="main-layout">
+        <div class="code-section">
+          <h3>📝 Source Code</h3>
+          <div id="codeLines">
+            <div class="code-line" data-line="1">
+              <span class="line-number">1</span>
+              <span>console.log("🚀 Start");</span>
+            </div>
+            <div class="code-line" data-line="2">
+              <span class="line-number">2</span>
+              <span></span>
+            </div>
+            <div class="code-line" data-line="3">
+              <span class="line-number">3</span>
+              <span>setTimeout(() => {</span>
+            </div>
+            <div class="code-line" data-line="4">
+              <span class="line-number">4</span>
+              <span>&nbsp;&nbsp;console.log("⏰ Timeout");</span>
+            </div>
+            <div class="code-line" data-line="5">
+              <span class="line-number">5</span>
+              <span>}, 1000);</span>
+            </div>
+            <div class="code-line" data-line="6">
+              <span class="line-number">6</span>
+              <span></span>
+            </div>
+            <div class="code-line" data-line="7">
+              <span class="line-number">7</span>
+              <span>Promise.resolve().then(() => {</span>
+            </div>
+            <div class="code-line" data-line="8">
+              <span class="line-number">8</span>
+              <span>&nbsp;&nbsp;console.log("✨ Promise");</span>
+            </div>
+            <div class="code-line" data-line="9">
+              <span class="line-number">9</span>
+              <span>}).then(() => {</span>
+            </div>
+            <div class="code-line" data-line="10">
+              <span class="line-number">10</span>
+              <span>&nbsp;&nbsp;console.log("🔗 Chained Promise");</span>
+            </div>
+            <div class="code-line" data-line="11">
+              <span class="line-number">11</span>
+              <span>});</span>
+            </div>
+            <div class="code-line" data-line="12">
+              <span class="line-number">12</span>
+              <span></span>
+            </div>
+            <div class="code-line" data-line="13">
+              <span class="line-number">13</span>
+              <span>console.log("🏁 End");</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="runtime-grid">
+          <div class="runtime-component call-stack">
+            <h3>📚 Call Stack</h3>
+            <div id="callStackItems">
+              <div class="stack-item">Global Context</div>
+            </div>
+          </div>
+
+          <div class="runtime-component memory-heap">
+            <h3>🧠 Memory Heap</h3>
+            <div id="memoryHeapItems">
+              <div class="heap-item">Global Variables</div>
+            </div>
+          </div>
+
+          <div class="runtime-component web-apis">
+            <h3>🌐 Web APIs</h3>
+            <div id="webApisItems">
+              <div class="empty-state">No active timers</div>
+            </div>
+          </div>
+
+          <div class="runtime-component event-loop">
+            <h3>🔄 Event Loop</h3>
+            <div id="eventLoopItems">
+              <div class="empty-state">Monitoring...</div>
+            </div>
+          </div>
+
+          <div class="queues-container">
+            <div class="runtime-component callback-queue">
+              <h3>📋 Callback Queue</h3>
+              <div id="callbackQueueItems">
+                <div class="empty-state">Empty</div>
+              </div>
+            </div>
+
+            <div class="runtime-component microtask-queue">
+              <h3>⚡ Microtask Queue</h3>
+              <div id="microtaskQueueItems">
+                <div class="empty-state">Empty</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-info">
+        <div class="step-counter" id="stepCounter">Step 0 / 10</div>
+        <div class="step-description" id="stepDescription">
+          Press → to start stepping through the JavaScript execution
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="btn" onclick="resetExecution()">🔄 Reset</button>
+        <button class="btn" onclick="toggleAutoPlay()" id="autoBtn">
+          ▶️ Auto Play
+        </button>
+      </div>
+
+      <div class="console-section">
+        <h3>🖥️ Console Output</h3>
+        <div class="console-output" id="consoleOutput">
+          <div class="console-line">Ready for execution...</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="navigation-hint">
+      <div>💡 Use arrow keys to navigate</div>
+      <div>Focus on this page first</div>
+    </div>
+
+    <script>
+      let currentStep = 0;
+      let isAutoPlaying = false;
+      let autoPlayInterval;
+
+      const steps = [
+        {
+          line: -1,
+          description:
+            "JavaScript engine initializes - Global execution context created",
+          action: () => {
+            highlightComponent("call-stack");
+            updateCallStack(["Global Context"]);
+          },
+        },
+        {
+          line: 1,
+          description:
+            "Executing console.log('🚀 Start') - Synchronous operation pushed to call stack",
+          action: () => {
+            highlightComponent("call-stack");
+            updateCallStack(['console.log("🚀 Start")', "Global Context"]);
+            addToConsole("🚀 Start", "sync");
+          },
+        },
+        {
+          line: 1,
+          description:
+            "console.log completed - Function popped from call stack",
+          action: () => {
+            highlightComponent("call-stack");
+            updateCallStack(["Global Context"]);
+          },
+        },
+        {
+          line: 3,
+          description:
+            "setTimeout() called - Timer registered with Web APIs, callback scheduled",
+          action: () => {
+            highlightComponent("web-apis");
+            updateWebApis(["Timer: 1000ms"]);
+            updateCallStack(["setTimeout()", "Global Context"]);
+          },
+        },
+        {
+          line: 3,
+          description:
+            "setTimeout returns - Function popped from call stack, timer running in background",
+          action: () => {
+            highlightComponent("web-apis");
+            updateCallStack(["Global Context"]);
+          },
+        },
+        {
+          line: 7,
+          description:
+            "Promise.resolve().then() called - Promise immediately resolved, callback queued",
+          action: () => {
+            highlightComponent("microtask-queue");
+            updateMicrotaskQueue(["Promise callback"]);
+            updateCallStack(["Promise.then()", "Global Context"]);
+          },
+        },
+        {
+          line: 7,
+          description:
+            "Promise.then() returns - Function popped from call stack",
+          action: () => {
+            highlightComponent("microtask-queue");
+            updateCallStack(["Global Context"]);
+          },
+        },
+        {
+          line: 13,
+          description:
+            "Executing console.log('🏁 End') - Last synchronous operation",
+          action: () => {
+            highlightComponent("call-stack");
+            updateCallStack(['console.log("🏁 End")', "Global Context"]);
+            addToConsole("🏁 End", "sync");
+          },
+        },
+        {
+          line: 13,
+          description:
+            "console.log completed - Call stack now empty, Event Loop checks microtasks",
+          action: () => {
+            highlightComponent("event-loop");
+            updateCallStack(["Global Context"]);
+            updateEventLoop(["Processing Microtasks"]);
+          },
+        },
+        {
+          line: 8,
+          description:
+            "Promise callback executing - Microtask queue processed before callback queue",
+          action: () => {
+            highlightComponent("call-stack");
+            updateCallStack(["Promise callback", "Global Context"]);
+            updateMicrotaskQueue(["Chained Promise callback"]);
+            addToConsole("✨ Promise", "promise");
+          },
+        },
+        {
+          line: 8,
+          description:
+            "Promise callback completed - Another microtask was queued by chaining",
+          action: () => {
+            highlightComponent("microtask-queue");
+            updateCallStack(["Global Context"]);
+          },
+        },
+        {
+          line: 10,
+          description:
+            "Chained Promise callback executing - Processing remaining microtasks",
+          action: () => {
+            highlightComponent("call-stack");
+            updateCallStack(["Chained Promise callback", "Global Context"]);
+            updateMicrotaskQueue([]);
+            addToConsole("🔗 Chained Promise", "promise");
+          },
+        },
+        {
+          line: 10,
+          description:
+            "All microtasks completed - Event Loop now checks callback queue",
+          action: () => {
+            highlightComponent("event-loop");
+            updateCallStack(["Global Context"]);
+            updateEventLoop(["Checking Callback Queue"]);
+          },
+        },
+        {
+          line: -1,
+          description:
+            "Timer expired (1000ms) - Callback moved from Web APIs to Callback Queue",
+          action: () => {
+            highlightComponent("callback-queue");
+            updateWebApis([]);
+            updateCallbackQueue(["setTimeout callback"]);
+            updateEventLoop(["Moving callback to queue"]);
+          },
+        },
+        {
+          line: 4,
+          description:
+            "setTimeout callback executing - Event Loop moved callback to call stack",
+          action: () => {
+            highlightComponent("call-stack");
+            updateCallStack(["setTimeout callback", "Global Context"]);
+            updateCallbackQueue([]);
+            addToConsole("⏰ Timeout", "async");
+          },
+        },
+        {
+          line: 4,
+          description:
+            "Execution complete - All queues empty, Event Loop continues monitoring",
+          action: () => {
+            highlightComponent("event-loop");
+            updateCallStack(["Global Context"]);
+            updateEventLoop(["Idle - Monitoring"]);
+          },
+        },
+      ];
+
+      // Keyboard event listener
+      document.addEventListener("keydown", function (event) {
+        switch (event.key) {
+          case "ArrowRight":
+            event.preventDefault();
+            nextStep();
+            break;
+          case "ArrowLeft":
+            event.preventDefault();
+            previousStep();
+            break;
+          case "r":
+          case "R":
+            event.preventDefault();
+            resetExecution();
+            break;
+          case " ":
+            event.preventDefault();
+            toggleAutoPlay();
+            break;
+        }
+      });
+
+      function nextStep() {
+        if (currentStep < steps.length - 1) {
+          currentStep++;
+          executeCurrentStep();
+        }
+      }
+
+      function previousStep() {
+        if (currentStep > 0) {
+          currentStep--;
+          executeCurrentStep();
+        }
+      }
+
+      function executeCurrentStep() {
+        const step = steps[currentStep];
+
+        // Update step info
+        document.getElementById("stepCounter").textContent = `Step ${
+          currentStep + 1
+        } / ${steps.length}`;
+        document.getElementById("stepDescription").textContent =
+          step.description;
+
+        // Reset all components
+        clearAllHighlights();
+
+        // Highlight current line
+        if (step.line > 0) {
+          highlightLine(step.line);
+        }
+
+        // Execute step action
+        step.action();
+      }
+
+      function resetExecution() {
+        currentStep = 0;
+        stopAutoPlay();
+
+        // Reset UI
+        document.querySelectorAll(".code-line").forEach((line) => {
+          line.classList.remove("current", "executed");
+        });
+
+        clearAllHighlights();
+        clearConsole();
+
+        // Reset components to initial state
+        updateCallStack(["Global Context"]);
+        updateMemoryHeap(["Global Variables"]);
+        updateWebApis([]);
+        updateCallbackQueue([]);
+        updateMicrotaskQueue([]);
+        updateEventLoop([]);
+
+        // Update step info
+        document.getElementById("stepCounter").textContent =
+          "Step 0 / " + steps.length;
+        document.getElementById("stepDescription").textContent =
+          "Press → to start stepping through the JavaScript execution";
+      }
+
+      function toggleAutoPlay() {
+        if (isAutoPlaying) {
+          stopAutoPlay();
+        } else {
+          startAutoPlay();
+        }
+      }
+
+      function startAutoPlay() {
+        isAutoPlaying = true;
+        document.getElementById("autoBtn").textContent = "⏸️ Pause";
+
+        autoPlayInterval = setInterval(() => {
+          if (currentStep < steps.length - 1) {
+            nextStep();
+          } else {
+            stopAutoPlay();
+          }
+        }, 2000);
+      }
+
+      function stopAutoPlay() {
+        isAutoPlaying = false;
+        document.getElementById("autoBtn").textContent = "▶️ Auto Play";
+        if (autoPlayInterval) {
+          clearInterval(autoPlayInterval);
+        }
+      }
+
+      function highlightLine(lineNumber) {
+        // Remove all highlights first
+        document.querySelectorAll(".code-line").forEach((line) => {
+          line.classList.remove("current");
+          const lineNum = parseInt(line.dataset.line);
+          if (lineNum && lineNum < lineNumber) {
+            line.classList.add("executed");
+          } else if (lineNum >= lineNumber) {
+            line.classList.remove("executed");
+          }
+        });
+
+        // Highlight current line
+        const currentLine = document.querySelector(
+          `[data-line="${lineNumber}"]`
+        );
+        if (currentLine) {
+          currentLine.classList.add("current");
+        }
+      }
+
+      function highlightComponent(componentClass) {
+        // Remove all component highlights
+        clearAllHighlights();
+
+        // Add highlight to specified component
+        const component = document.querySelector(`.${componentClass}`);
+        if (component) {
+          component.classList.add("active");
+        }
+      }
+
+      function clearAllHighlights() {
+        document.querySelectorAll(".runtime-component").forEach((comp) => {
+          comp.classList.remove("active");
+        });
+      }
+
+      function updateComponent(containerId, items, itemClass) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = "";
+
+        if (items.length === 0) {
+          const emptyDiv = document.createElement("div");
+          emptyDiv.className = "empty-state";
+          emptyDiv.textContent = "Empty";
+          container.appendChild(emptyDiv);
+          return;
+        }
+
+        items.forEach((item) => {
+          const div = document.createElement("div");
+          div.className = `component-item ${itemClass}`;
+          div.textContent = item;
+          container.appendChild(div);
+        });
+      }
+
+      function updateCallStack(items) {
+        updateComponent("callStackItems", items, "stack-item");
+      }
+
+      function updateMemoryHeap(items) {
+        updateComponent("memoryHeapItems", items, "heap-item");
+      }
+
+      function updateWebApis(items) {
+        updateComponent("webApisItems", items, "api-item");
+      }
+
+      function updateCallbackQueue(items) {
+        updateComponent("callbackQueueItems", items, "queue-item");
+      }
+
+      function updateMicrotaskQueue(items) {
+        updateComponent("microtaskQueueItems", items, "microtask-item");
+      }
+
+      function updateEventLoop(items) {
+        updateComponent("eventLoopItems", items, "loop-item");
+      }
+
+      function addToConsole(message, type) {
+        const console = document.getElementById("consoleOutput");
+        const line = document.createElement("div");
+        line.className = `console-line console-${type}`;
+        line.textContent = message;
+        console.appendChild(line);
+        console.scrollTop = console.scrollHeight;
+      }
+
+      function clearConsole() {
+        document.getElementById("consoleOutput").innerHTML =
+          '<div class="console-line">Console cleared - Ready for execution...</div>';
+      }
+
+      // Initialize on page load
+      document.addEventListener("DOMContentLoaded", function () {
+        resetExecution();
+
+        // Focus the body to ensure keyboard events work
+        document.body.focus();
+        document.body.setAttribute("tabindex", "0");
+      });
+
+      // Click handlers for code lines (optional navigation)
+      document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".code-line").forEach((line, index) => {
+          line.addEventListener("click", function () {
+            // Find the step that corresponds to this line
+            const lineNumber = parseInt(line.dataset.line);
+            const stepIndex = steps.findIndex(
+              (step) => step.line === lineNumber
+            );
+            if (stepIndex !== -1 && stepIndex !== currentStep) {
+              currentStep = stepIndex;
+              executeCurrentStep();
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
