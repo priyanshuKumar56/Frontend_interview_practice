@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>From Validation</title>
+  </head>
+  <style>
+    body {
+      background-color: #f0f4f8;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+    input,
+    select,
+    button {
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+  <body>
+    <div class="container">
+      <form action="" method="post" id="form">
+        <option value="UserName">User Name</option>
+        <input type="text" name="name" id="username" />
+        <option value="email">Email</option>
+        <input type="text" name="email" id="email" />
+        <option value="gender">Select Gende</option>
+        <select name="Select Gender" id="">
+          <option value="male">male</option>
+          <option value="female">Female</option>
+          <option value="no say">No say</option>
+        </select>
+
+        <option value="password">Password</option>
+        <span>
+          <input type="password" name="password" id="passward" />
+          <button class="toggletypepass" type="button"></button>
+        </span>
+        <button class="formsubmit" type="submit">submit</button>
+      </form>
+    </div>
+  </body>
+  <script>
+    const formsubmit = document.querySelector(".formsubmit");
+    const form = document.getElementById("form");
+    const toggletypepass = document.querySelector(".toggletypepass");
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+      const usename = data.name;
+      const email = data.email;
+      if (!usename || !email) {
+        alert("Please fill in all fields");
+        return;
+      }
+      if (usename.length < 3 || usename.length > 15) {
+        alert("Username must be between 3 and 15 characters long");
+        return;
+      }
+      if (!/^[a-zA-Z0-9]+$/.test(usename)) {
+        alert("Username can only contain letters and numbers");
+        return;
+      }
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        alert("Please enter a valid email address");
+        return;
+      }
+      if (data.password.length < 6) {
+        alert("Password must be at least 6 characters long");
+        return;
+      }
+      function isStrongPassword(pwd) {
+        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+        return regex.test(pwd);
+      }
+      // console.log(isStrongPassword(data.password));
+      if (!isStrongPassword(data.password)) {
+        alert(
+          "Password must contain at least one uppercase letter, one lowercase letter, and one number"
+        );
+        return;
+      }
+
+      // console.log(usename, email);
+    });
+
+    toggletypepass.textContent = "open";
+    toggletypepass.addEventListener("click", (e) => {
+      const detail = document.getElementById("passward");
+      e.preventDefault();
+      if (detail.type == "password") {
+        detail.type = "text";
+        toggletypepass.textContent = "close";
+      } else {
+        detail.type = "password";
+        toggletypepass.textContent = "open";
+      }
+    });
+  </script>
+</html>
