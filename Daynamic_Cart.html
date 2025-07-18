@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TechStore - Premium Electronics</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Arial", sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background-color: #f9f9f9;
+      }
+
+      /* Navigation Styles */
+      nav {
+        background: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+
+      .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 70px;
+      }
+
+      .logo {
+        font-size: 28px;
+        font-weight: bold;
+        color: #2563eb;
+      }
+
+      .nav-menu {
+        display: flex;
+        list-style: none;
+        gap: 30px;
+      }
+
+      .nav-menu a {
+        text-decoration: none;
+        color: #374151;
+        font-weight: 500;
+        transition: color 0.3s;
+      }
+
+      .nav-menu a:hover {
+        color: #2563eb;
+      }
+
+      .cart-btn {
+        background: #2563eb;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: background 0.3s;
+      }
+
+      .cart-btn:hover {
+        background: #1d4ed8;
+      }
+
+      /* Hero Section */
+      .hero {
+        background: linear-gradient(135deg, #2563eb, #7c3aed);
+        color: white;
+        padding: 80px 0;
+      }
+
+      .hero-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      .hero-header {
+        text-align: center;
+        margin-bottom: 60px;
+      }
+
+      .hero-header h1 {
+        font-size: 48px;
+        margin-bottom: 16px;
+        font-weight: bold;
+      }
+
+      .hero-header p {
+        font-size: 20px;
+        color: #ddd6fe;
+      }
+
+      /* Product Grid */
+      .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+      }
+      .cartSetion {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+      }
+      .product-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+        color: #333;
+      }
+      .companyname {
+        font-size: small;
+        font-weight: bolder;
+        padding: 10px;
+        background-color: #7c3aed34;
+        box-shadow: 1px 1px 10px wheat;
+        border-radius: 20px;
+      }
+
+      .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      }
+
+      .product-image {
+        background: #f3f4f6;
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 64px;
+        color: #9ca3af;
+      }
+
+      .product-info {
+        padding: 20px;
+      }
+
+      .product-name {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 8px;
+      }
+
+      .product-description {
+        color: #6b7280;
+        font-size: 14px;
+        margin-bottom: 15px;
+      }
+
+      .product-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .product-price {
+        font-size: 24px;
+        font-weight: bold;
+        color: #2563eb;
+      }
+
+      .add-to-cart {
+        background: #2563eb;
+        color: white;
+        padding: 10px 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: background 0.3s;
+      }
+
+      .add-to-cart:hover {
+        background: #1d4ed8;
+      }
+
+      /* Features Section */
+      .features {
+        padding: 80px 0;
+        background: white;
+      }
+      .features-toggle {
+        display: none;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      .section-header {
+        text-align: center;
+        margin-bottom: 60px;
+      }
+
+      .section-header h2 {
+        font-size: 36px;
+        margin-bottom: 16px;
+        color: #111827;
+      }
+
+      .section-header p {
+        font-size: 18px;
+        color: #6b7280;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+      }
+
+      .feature-card {
+        text-align: center;
+        padding: 30px;
+        background: #f9fafb;
+        border-radius: 12px;
+        transition: transform 0.3s;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-3px);
+      }
+
+      .feature-icon {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        margin-bottom: 20px;
+      }
+
+      .feature-icon.blue {
+        background: #dbeafe;
+        color: #2563eb;
+      }
+      .feature-icon.green {
+        background: #dcfce7;
+        color: #16a34a;
+      }
+      .feature-icon.purple {
+        background: #f3e8ff;
+        color: #7c3aed;
+      }
+      .feature-icon.red {
+        background: #fee2e2;
+        color: #dc2626;
+      }
+      .feature-icon.yellow {
+        background: #fef3c7;
+        color: #d97706;
+      }
+      .feature-icon.indigo {
+        background: #e0e7ff;
+        color: #4338ca;
+      }
+
+      .feature-card h3 {
+        font-size: 20px;
+        margin-bottom: 12px;
+        color: #111827;
+      }
+
+      .feature-card p {
+        color: #6b7280;
+        line-height: 1.6;
+      }
+
+      /* Newsletter Section */
+      .newsletter {
+        padding: 80px 0;
+        background: #111827;
+        color: white;
+      }
+      .contect-toggle {
+        display: none;
+      }
+
+      .newsletter-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .newsletter-header h2 {
+        font-size: 36px;
+        margin-bottom: 16px;
+      }
+
+      .newsletter-header p {
+        font-size: 20px;
+        color: #d1d5db;
+      }
+
+      .newsletter-form {
+        max-width: 600px;
+        margin: 0 auto 60px;
+      }
+
+      .form-group {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 16px;
+      }
+
+      .newsletter-input {
+        flex: 1;
+        padding: 12px 16px;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+      }
+
+      .newsletter-btn {
+        background: #2563eb;
+        color: white;
+        padding: 12px 32px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: background 0.3s;
+      }
+
+      .newsletter-btn:hover {
+        background: #1d4ed8;
+      }
+
+      .newsletter-disclaimer {
+        text-align: center;
+        font-size: 14px;
+        color: #9ca3af;
+      }
+
+      .newsletter-features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 40px;
+        margin-top: 60px;
+      }
+
+      .newsletter-feature {
+        text-align: center;
+      }
+
+      .newsletter-feature-icon {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 20px;
+        background: #374151;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+      }
+
+      .newsletter-feature-icon.blue {
+        color: #60a5fa;
+      }
+      .newsletter-feature-icon.green {
+        color: #4ade80;
+      }
+      .newsletter-feature-icon.purple {
+        color: #a78bfa;
+      }
+
+      .newsletter-feature h3 {
+        font-size: 18px;
+        margin-bottom: 12px;
+      }
+
+      .newsletter-feature p {
+        color: #9ca3af;
+      }
+
+      /* Footer */
+      footer {
+        background: #374151;
+        color: white;
+        padding: 40px 0;
+        text-align: center;
+      }
+
+      .footer-content h3 {
+        font-size: 24px;
+        margin-bottom: 12px;
+      }
+
+      .footer-content p {
+        color: #9ca3af;
+        margin-bottom: 20px;
+      }
+
+      .footer-links {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin-bottom: 20px;
+      }
+
+      .footer-links a {
+        color: #9ca3af;
+        text-decoration: none;
+        transition: color 0.3s;
+      }
+
+      .footer-links a:hover {
+        color: white;
+      }
+
+      .footer-copyright {
+        color: #6b7280;
+        font-size: 14px;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .nav-menu {
+          display: none;
+        }
+
+        .hero-header h1 {
+          font-size: 36px;
+        }
+
+        .hero-header p {
+          font-size: 18px;
+        }
+
+        .product-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .features-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .form-group {
+          flex-direction: column;
+        }
+
+        .newsletter-features {
+          grid-template-columns: 1fr;
+        }
+
+        .footer-links {
+          flex-direction: column;
+          gap: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <div class="home">
+      <nav>
+        <div class="nav-container">
+          <div class="logo">TechStore</div>
+          <ul class="nav-menu">
+            <li><a href="#home">Home</a></li>
+
+            <li><a href="#features">features</a></li>
+            <li><a href="#contect">Contact</a></li>
+          </ul>
+          <button class="cart-btn">Cart (0)</button>
+        </div>
+      </nav>
+      <div class="cartSetion"></div>
+      <!-- Hero Section with Product List -->
+      <section class="hero" id="product_section">
+        <div class="hero-container">
+          <div class="hero-header">
+            <h1>Premium Electronics Collection</h1>
+            <p>Discover the latest technology at unbeatable prices</p>
+          </div>
+
+          <div class="product-grid" id="Products_list"></div>
+        </div>
+      </section>
+    </div>
+    <!-- Features Section -->
+    <section class="features features-toggle">
+      <nav>
+        <div class="nav-container">
+          <div class="logo">TechStore</div>
+          <ul class="nav-menu">
+            <li><a href="#home">Home</a></li>
+
+            <li><a href="#features">features</a></li>
+            <li><a href="#contect">Contact</a></li>
+          </ul>
+          <button class="cart-btn">Cart (0)</button>
+        </div>
+      </nav>
+      <div class="container">
+        <div class="section-header">
+          <h2>Why Choose TechStore?</h2>
+          <p>We provide the best shopping experience with premium products</p>
+        </div>
+
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon blue">💲</div>
+            <h3>Best Prices</h3>
+            <p>Competitive pricing with regular discounts and offers</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon green">✅</div>
+            <h3>Quality Guarantee</h3>
+            <p>
+              All products come with manufacturer warranty and quality assurance
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon purple">🚚</div>
+            <h3>Fast Shipping</h3>
+            <p>
+              Free shipping on orders over $50 with express delivery options
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon red">💬</div>
+            <h3>24/7 Support</h3>
+            <p>Round-the-clock customer support for all your queries</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon yellow">🔒</div>
+            <h3>Secure Payment</h3>
+            <p>SSL encrypted checkout with multiple payment options</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon indigo">🔄</div>
+            <h3>Easy Returns</h3>
+            <p>30-day return policy with hassle-free exchanges</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter contect-toggle">
+      <nav>
+        <div class="nav-container">
+          <div class="logo">TechStore</div>
+          <ul class="nav-menu">
+            <li><a href="#home">Home</a></li>
+
+            <li><a href="#features">features</a></li>
+            <li><a href="#contect">Contact</a></li>
+          </ul>
+          <button class="cart-btn">Cart (0)</button>
+        </div>
+      </nav>
+      <div class="container">
+        <div class="newsletter-header">
+          <h2>Stay Updated</h2>
+          <p>
+            Get the latest deals and product updates delivered to your inbox
+          </p>
+        </div>
+
+        <div class="newsletter-form">
+          <div class="form-group">
+            <input
+              type="email"
+              class="newsletter-input"
+              placeholder="Enter your email address"
+            />
+            <button class="newsletter-btn">Subscribe</button>
+          </div>
+          <p class="newsletter-disclaimer">
+            By subscribing, you agree to receive marketing emails from
+            TechStore. You can unsubscribe at any time.
+          </p>
+        </div>
+
+        <div class="newsletter-features">
+          <div class="newsletter-feature">
+            <div class="newsletter-feature-icon blue">⏰</div>
+            <h3>Weekly Deals</h3>
+            <p>Exclusive offers every week on trending products</p>
+          </div>
+
+          <div class="newsletter-feature">
+            <div class="newsletter-feature-icon green">⚡</div>
+            <h3>Flash Sales</h3>
+            <p>Limited-time offers with up to 70% off</p>
+          </div>
+
+          <div class="newsletter-feature">
+            <div class="newsletter-feature-icon purple">⭐</div>
+            <h3>New Arrivals</h3>
+            <p>Be the first to know about latest product launches</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div id="routes_render"></div>
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <h3>TechStore</h3>
+          <p>Your trusted partner for premium electronics</p>
+          <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Contact Us</a>
+          </div>
+          <p class="footer-copyright">© 2024 TechStore. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+  <script src="/practice.js"></script>
+</html>

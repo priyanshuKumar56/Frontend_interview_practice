@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Charcter Counter</title>
+  </head>
+  <body>
+    <h1>Charcter Counter</h1>
+    <textarea name="charecter" id="charecterField"></textarea>
+    <output class="output"></output>
+  </body>
+  <script>
+    const charecterField = document.getElementById("charecterField");
+    const output = document.getElementsByClassName("output")[0];
+    console.log(charecterField, output);
+    function debounce(func, delay = 300) {
+      let timeout;
+      return function (...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+          func(...args);
+        }, delay);
+      };
+    }
+    function showdetail(inputvalue) {
+      // output.textContent = "";
+      output.textContent = inputvalue.length + 1;
+      inputvalue = "";
+    }
+    const showdebounce = debounce(showdetail, 300);
+    charecterField.addEventListener("keypress", function () {
+      showdebounce(charecterField.value);
+    });
+  </script>
+</html>
