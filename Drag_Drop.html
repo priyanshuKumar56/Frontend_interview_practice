@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Drag And Drop</title>
+  </head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .drag-drop {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      width: 600px;
+      margin: 0 auto;
+    }
+    #drag-list,
+    #drag-list2 {
+      width: 200px;
+      border: 2px dashed black;
+      list-style-type: none;
+      padding: 1.3rem;
+    }
+    .drag-item,
+    .drag-item2 {
+      padding: 10px;
+      height: 20px;
+      background-color: #f1f1f1;
+      margin-bottom: 5px;
+      cursor: grab;
+    }
+    .drag-item:hover {
+      background-color: #ddd;
+    }
+    .dragging {
+      border: 2px dashed #333;
+    }
+  </style>
+  <body>
+    <div class="drag-drop">
+      <ul id="drag-list" class="drag-list-active">
+        <li class="drag-item" draggable="true">🍕 pizza</li>
+        <li class="drag-item" draggable="true">🍔 burgur</li>
+        <li class="drag-item" draggable="true">🧀 chesse</li>
+        <li class="drag-item" draggable="true">🍗 chicken</li>
+        <li class="drag-item" draggable="true">🍜 noodle</li>
+        <li class="drag-item" draggable="true">🍿 popcorn</li>
+      </ul>
+      <ul id="drag-list2" class="drag-list2-active">
+        <li class="drag-item2" draggable="true">borkaly</li>
+        <li class="drag-item2" draggable="true">cavliflower</li>
+        <li class="drag-item2" draggable="true">mint</li>
+        <li class="drag-item2" draggable="true">lemons</li>
+        <li class="drag-item2" draggable="true">ladyfinger</li>
+        <li class="drag-item2" draggable="true">ginger</li>
+      </ul>
+    </div>
+  </body>
+  <script src="/practice.js"></script>
+</html>

@@ -3,24 +3,381 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Sortable List</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .container {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        width: 100%;
+      }
+
+      h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 30px;
+        font-size: 2rem;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .sortable-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .list-item {
+        background: #fff;
+        margin: 10px 0;
+        padding: 15px 20px;
+        border-radius: 12px;
+        cursor: grab;
+        user-select: none;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        display: flex;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .list-item::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        transition: width 0.3s ease;
+      }
+
+      .list-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        border-color: #667eea;
+      }
+
+      .list-item:hover::before {
+        width: 8px;
+      }
+
+      .drag-handle {
+        color: #999;
+        margin-right: 15px;
+        font-size: 1.2rem;
+        transition: color 0.3s ease;
+      }
+
+      .list-item:hover .drag-handle {
+        color: #667eea;
+      }
+
+      .item-text {
+        flex: 1;
+        font-weight: 500;
+        color: #333;
+        font-size: 1.1rem;
+      }
+
+      .list-item.dragging {
+        opacity: 0.5;
+        transform: rotate(5deg);
+        cursor: grabbing;
+        z-index: 1000;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      .drop-indicator {
+        height: 3px;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        border-radius: 2px;
+        margin: 5px 0;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+      }
+
+      .drop-indicator.active {
+        opacity: 1;
+        animation: pulse 1s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scaleY(1);
+          box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+        }
+        50% {
+          transform: scaleY(1.5);
+          box-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
+        }
+      }
+
+      .instructions {
+        text-align: center;
+        color: #666;
+        font-size: 0.9rem;
+        margin-top: 20px;
+        padding: 15px;
+        background: rgba(102, 126, 234, 0.1);
+        border-radius: 10px;
+        border-left: 4px solid #667eea;
+      }
+    </style>
   </head>
-  <style>
-    .active {
-      color: red;
-      font-weight: bold;
-      background-color: black;
-    }
-  </style>
   <body>
-    <div class="hi active">hi</div>
-    <img src="" alt="" /><input type="text" />
-    <button class="toggleinput">toggle hi</button>
-    <div id="middle">
-      <p>sjkd</p>
-      <span>sjd</span>
+    <div class="container">
+      <h1>Sortable List</h1>
+      <ul class="sortable-list" id="sortableList">
+        <li class="list-item" draggable="true">
+          <span class="drag-handle">⋮⋮</span>
+          <span class="item-text">Learn JavaScript</span>
+        </li>
+        <li class="list-item" draggable="true">
+          <span class="drag-handle">⋮⋮</span>
+          <span class="item-text">Master CSS Grid</span>
+        </li>
+        <li class="list-item" draggable="true">
+          <span class="drag-handle">⋮⋮</span>
+          <span class="item-text">Build React App</span>
+        </li>
+        <li class="list-item" draggable="true">
+          <span class="drag-handle">⋮⋮</span>
+          <span class="item-text">Deploy to Production</span>
+        </li>
+        <li class="list-item" draggable="true">
+          <span class="drag-handle">⋮⋮</span>
+          <span class="item-text">Optimize Performance</span>
+        </li>
+        <li class="list-item" draggable="true">
+          <span class="drag-handle">⋮⋮</span>
+          <span class="item-text">Write Unit Tests</span>
+        </li>
+      </ul>
+      <div class="instructions">
+        💡 Drag and drop the items above to reorder them!
+      </div>
     </div>
-    <div>djk</div>
+
+    <script>
+      class SortableList {
+        constructor(listElement) {
+          this.list = listElement;
+          this.draggedItem = null;
+          this.dropIndicators = [];
+
+          this.init();
+        }
+
+        init() {
+          this.createDropIndicators();
+          this.attachEventListeners();
+        }
+
+        createDropIndicators() {
+          const items = this.list.querySelectorAll(".list-item");
+
+          // Create drop indicator before first item
+          const firstIndicator = document.createElement("div");
+          firstIndicator.className = "drop-indicator";
+          this.list.insertBefore(firstIndicator, items[0]);
+          this.dropIndicators.push(firstIndicator);
+
+          // Create drop indicators after each item
+          items.forEach((item) => {
+            const indicator = document.createElement("div");
+            indicator.className = "drop-indicator";
+            this.list.insertBefore(indicator, item.nextSibling);
+            this.dropIndicators.push(indicator);
+          });
+        }
+
+        attachEventListeners() {
+          const items = this.list.querySelectorAll(".list-item");
+
+          items.forEach((item) => {
+            item.addEventListener("dragstart", (e) => this.handleDragStart(e));
+            item.addEventListener("dragend", (e) => this.handleDragEnd(e));
+          });
+
+          this.list.addEventListener("dragover", (e) => this.handleDragOver(e));
+          this.list.addEventListener("drop", (e) => this.handleDrop(e));
+
+          // Add touch support for mobile
+          items.forEach((item) => {
+            item.addEventListener(
+              "touchstart",
+              (e) => this.handleTouchStart(e),
+              { passive: false }
+            );
+            item.addEventListener("touchmove", (e) => this.handleTouchMove(e), {
+              passive: false,
+            });
+            item.addEventListener("touchend", (e) => this.handleTouchEnd(e));
+          });
+        }
+
+        handleDragStart(e) {
+          this.draggedItem = e.target;
+          e.target.classList.add("dragging");
+
+          // Set drag image
+          e.dataTransfer.effectAllowed = "move";
+          e.dataTransfer.setData("text/html", e.target.outerHTML);
+        }
+
+        handleDragEnd(e) {
+          e.target.classList.remove("dragging");
+          this.clearDropIndicators();
+          this.draggedItem = null;
+        }
+
+        handleDragOver(e) {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = "move";
+
+          const afterElement = this.getDragAfterElement(e.clientY);
+          const indicator = this.getIndicatorForPosition(afterElement);
+
+          this.clearDropIndicators();
+          if (indicator) {
+            indicator.classList.add("active");
+          }
+        }
+
+        handleDrop(e) {
+          e.preventDefault();
+
+          if (!this.draggedItem) return;
+
+          const afterElement = this.getDragAfterElement(e.clientY);
+
+          if (afterElement == null) {
+            this.list.appendChild(this.draggedItem);
+          } else {
+            this.list.insertBefore(this.draggedItem, afterElement);
+          }
+
+          this.clearDropIndicators();
+        }
+
+        getDragAfterElement(y) {
+          const draggableElements = [
+            ...this.list.querySelectorAll(".list-item:not(.dragging)"),
+          ];
+
+          return draggableElements.reduce(
+            (closest, child) => {
+              const box = child.getBoundingClientRect();
+              const offset = y - box.top - box.height / 2;
+
+              if (offset < 0 && offset > closest.offset) {
+                return { offset: offset, element: child };
+              } else {
+                return closest;
+              }
+            },
+            { offset: Number.NEGATIVE_INFINITY }
+          ).element;
+        }
+
+        getIndicatorForPosition(afterElement) {
+          const items = [...this.list.querySelectorAll(".list-item")];
+
+          if (!afterElement) {
+            // Drop at the end
+            return this.dropIndicators[this.dropIndicators.length - 1];
+          }
+
+          const index = items.indexOf(afterElement);
+          return this.dropIndicators[index];
+        }
+
+        clearDropIndicators() {
+          this.dropIndicators.forEach((indicator) => {
+            indicator.classList.remove("active");
+          });
+        }
+
+        // Touch support methods
+        handleTouchStart(e) {
+          this.touchItem = e.target.closest(".list-item");
+          if (this.touchItem) {
+            this.touchItem.classList.add("dragging");
+            this.startY = e.touches[0].clientY;
+          }
+        }
+
+        handleTouchMove(e) {
+          if (!this.touchItem) return;
+
+          e.preventDefault();
+          const touch = e.touches[0];
+          const currentY = touch.clientY;
+
+          // Visual feedback for touch drag
+          this.touchItem.style.transform = `translateY(${
+            currentY - this.startY
+          }px)`;
+
+          const afterElement = this.getDragAfterElement(currentY);
+          const indicator = this.getIndicatorForPosition(afterElement);
+
+          this.clearDropIndicators();
+          if (indicator) {
+            indicator.classList.add("active");
+          }
+        }
+
+        handleTouchEnd(e) {
+          if (!this.touchItem) return;
+
+          const touch = e.changedTouches[0];
+          const afterElement = this.getDragAfterElement(touch.clientY);
+
+          if (afterElement == null) {
+            this.list.appendChild(this.touchItem);
+          } else {
+            this.list.insertBefore(this.touchItem, afterElement);
+          }
+
+          this.touchItem.style.transform = "";
+          this.touchItem.classList.remove("dragging");
+          this.clearDropIndicators();
+          this.touchItem = null;
+        }
+      }
+
+      // Initialize the sortable list when the DOM is loaded
+      document.addEventListener("DOMContentLoaded", () => {
+        const sortableList = document.getElementById("sortableList");
+        new SortableList(sortableList);
+      });
+    </script>
   </body>
-  <script src="/practice.js"></script>
 </html>

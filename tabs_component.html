@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>tabs Component</title>
+  </head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .tabs {
+      width: 300px;
+      margin: 0 auto;
+    }
+    .tab-buttons {
+      display: flex;
+      justify-content: space-around;
+      background-color: #f1f1f1;
+      padding: 10px;
+    }
+    .tab {
+      cursor: pointer;
+      padding: 10px 20px;
+      border: none;
+      background-color: transparent;
+    }
+    .tab:hover {
+      background-color: #ddd;
+    }
+    .tab-content {
+      border-top: 1px solid #ccc;
+      padding: 20px;
+    }
+
+    .active {
+      display: none; /* Show active content */
+    }
+  </style>
+  <body>
+    <div class="tabs">
+      <div class="tab-buttons">
+        <button class="tab" data-tab="1">Home</button>
+        <button class="tab" data-tab="2">Profile</button>
+        <button class="tab" data-tab="3">Settings</button>
+      </div>
+
+      <div class="tab-content">
+        <div class="content active" data-content="1">Home Content</div>
+        <div class="content active" data-content="2">Profile Content</div>
+        <div class="content active" data-content="3">Settings Content</div>
+      </div>
+    </div>
+  </body>
+  <script>
+    const tabButtons = document.querySelector(".tab-buttons");
+    const tabContents = document.querySelectorAll(".content");
+
+    tabButtons.addEventListener("click", function (e) {
+      tabContents.forEach((content) => {
+        const contentid = content.getAttribute("data-content");
+        if (e.target.getAttribute("data-tab") === contentid) {
+          content.classList.remove("active");
+        } else if (e.target.getAttribute("data-tab") !== contentid) {
+          content.classList.add("active");
+        }
+      });
+    });
+  </script>
+</html>
